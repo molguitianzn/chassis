@@ -1,0 +1,10 @@
+float64 initAngle # 车辆初始朝向，东偏北rad
+float64[] longitudes # +: E; -: W
+float64[] latitudes # +: N; -: S
+---
+
+bool hasFinished # 完成所有目标点
+
+---
+
+float64 progress_bar

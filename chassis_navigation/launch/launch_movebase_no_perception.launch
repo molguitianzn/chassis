@@ -1,0 +1,13 @@
+<launch>
+    <arg name="map" default="emptymap.pgm" />
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find chassis_navigation)/map/$(arg map)" output="screen"/>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="map_2_gnssOdom" args="0 0 0 0 0 0 map gnssOdom " />
+
+    <include file="$(find chassis_navigation)/launch/node_movebase_no_percep.launch">
+    </include>
+    
+    <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find robot_localization)/rviz/movebase_follow.rviz">
+    </node> -->
+
+</launch>

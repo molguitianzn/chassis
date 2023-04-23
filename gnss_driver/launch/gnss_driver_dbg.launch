@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="gnss_driver" type="gnss_driver_node" name="gnss_driver_node" output="screen">
+        <param name="gnss_port" value="/dev/ttyS2"/>
+    </node>
+</launch>

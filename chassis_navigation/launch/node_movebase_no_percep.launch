@@ -1,0 +1,15 @@
+<launch>
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base_node" output="screen" clear_params="true">
+        <param name="recovery_behavior_enabled" value="false" />
+        <rosparam file="$(find chassis_navigation)/param/costmap_common_params_no_percep.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find chassis_navigation)/param/costmap_common_params_no_percep.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find chassis_navigation)/param/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find chassis_navigation)/param/global_costmap_params.yaml" command="load" />
+
+        <param name="global_costmap/global_frame" value="map"/>
+        <param name="global_costmap/robot_base_frame" value="base_footprint"/>
+        <param name="local_costmap/global_frame" value="gnssOdom"/>
+        <param name="local_costmap/robot_base_frame" value="base_footprint"/>
+        <remap from="map" to="/map"/>
+    </node>
+</launch>

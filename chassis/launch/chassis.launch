@@ -1,0 +1,22 @@
+<launch>
+    <node pkg="chassis_base" type="chassis_base_node" name="chassis_base_node">
+        <param name="telecom_port" value="/dev/ttyS0"/>
+        <param name="can_port" value="can0"/>
+    </node>
+
+    <node pkg="gnss_driver" type="gnss_driver_node" name="gnss_driver_node">
+        <param name="gnss_port" value="/dev/ttyS2"/>
+    </node>
+
+    <node pkg="chassis_navigation" type="gnss_odom_node" name="gnss_odom_node">
+        <param name="gnss_rate" value="1.0"/>
+        <param name="v_min" value="0.5"/>
+    </node>
+
+    <include file="$(find chassis_navigation)/launch/launch_movebase_no_perception.launch">
+    </include>
+
+    <node pkg="chassis_navigation" type="chassis_navigation_node" name="chassis_navigation_node"/>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find chassis)/rviz/chassis.rviz"/>
+</launch>
