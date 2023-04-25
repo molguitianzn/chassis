@@ -1,5 +1,6 @@
 <launch>
     <node pkg="chassis_base" type="chassis_base_node" name="chassis_base_node" output="screen">
+        <param name="debug_alone" value="true"/>
         <param name="telecom_port" value="/dev/ttyS0"/>
         <param name="can_port" value="can0"/>
         <!-- <param name="autoOrManual" value="false"/> -->

@@ -28,7 +28,7 @@ protected:
     ros::Time current_time;
     std::string telePort;
     serial::Serial sp;
-    unsigned char uartBuffer[500];
+    unsigned char uartBuffer[4096];
 };
 
 #endif

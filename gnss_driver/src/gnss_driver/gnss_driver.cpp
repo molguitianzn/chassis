@@ -47,9 +47,9 @@ void GNSS_Driver::gnssReceive()
     memset((void*)uartBuffer, 0, sizeof(uartBuffer));
     if (n != 0)
     {
-        if (n > sizeof(uartBuffer))
+        if (n > sizeof(uartBuffer)-1)
         {
-            n = sp.read(uartBuffer, sizeof(uartBuffer));
+            n = sp.read(uartBuffer, sizeof(uartBuffer) - 1);
         }
         else
         {
@@ -75,7 +75,7 @@ int GNSS_Driver::parser(char *data, bool * isRMC)
     char* start;
     char *field;
     int index = 0;
-    start = strstr(data,"GNRMC");
+    start = strstr(data,"RMC");
     if (start)
     {
         *isRMC = true;
@@ -84,6 +84,14 @@ int GNSS_Driver::parser(char *data, bool * isRMC)
         {
             index++;
             field = strtok(NULL,",");
+            if (index == 2)
+            {
+                // unavailable
+                if (strcmp(field, "V") == 0)
+                {
+                    return -1;
+                }
+            }
             if (index == 3)
             {
                 gnrmc.longitude = atof(field);
@@ -123,7 +131,7 @@ int GNSS_Driver::parser(char *data, bool * isRMC)
     }
     else
     {
-        start = strstr(data,"GNGGA");
+        start = strstr(data,"GGA");
         if (start)
         { 
             *isRMC = false;
@@ -158,8 +166,8 @@ int GNSS_Driver::parser(char *data, bool * isRMC)
                     break;
                 }
             }
+            return 0;
         }
-        return 0;
     }
 
     return -1;

@@ -8,11 +8,9 @@ chassis::chassis(): nh("~")
 {
     nh.param<std::string>("telecom_port", telePort, "/dev/ttyS0");
     nh.param<std::string>("can_port", canPort, "can0");
-    pathFollowingAction_ = new actionlib::SimpleActionClient<chassis_navigation::pathFollowingAction>("pathFollowing", true);
-    ROS_INFO("waiting for path following server to start");
-    pathFollowingAction_ -> waitForServer();
-    ROS_INFO("following server started!");
+    nh.param<bool>("debug_alone", debug_alone, "false");
     // nh.param<bool>("autoOrManual", teleProtocal.autoOrManual, "true");
+    
 
     ki = (kinematics*)malloc(sizeof(kinematics));
     subTwist = nh.subscribe<geometry_msgs::Twist>("/cmd_vel", 10, &chassis::twistCb, this);
@@ -25,6 +23,16 @@ chassis::chassis(): nh("~")
     initUart();
     initCan();
     initMotor();
+
+    if (debug_alone)
+    {
+        return;
+    }
+
+    pathFollowingAction_ = new actionlib::SimpleActionClient<chassis_navigation::pathFollowingAction>("pathFollowing", true);
+    ROS_INFO("waiting for path following server to start");
+    pathFollowingAction_ -> waitForServer();
+    ROS_INFO("following server started!");
 }
 
 chassis::~chassis()
@@ -338,7 +346,10 @@ void chassis::pubOdomtry()
     transform.header.frame_id = "odom";
     transform.child_frame_id = "base_footprint";
     transform.transform.translation.x = x; transform.transform.translation.y = y; transform.transform.translation.z = 0;
-    // br.sendTransform(transform);
+    if (debug_alone)
+    {
+        br.sendTransform(transform);
+    }
 
     odom.child_frame_id = "base_footprint";
     odom.header.frame_id = "odom";
@@ -459,7 +470,10 @@ void chassis::teleReceive()
             switch (teleProtocal.functionCode)
             {
             case 0x01:
-                pathFollowingAction_ -> cancelGoal();
+                if (!debug_alone)
+                {
+                    pathFollowingAction_ -> cancelGoal();
+                }
                 send2base(teleProtocal.model);
                 break;
             case 0x02:
@@ -468,10 +482,13 @@ void chassis::teleReceive()
                 goalPathFollowing.initAngle = teleProtocal.initAngle;
                 goalPathFollowing.longitudes.assign(teleProtocal.longitudes.begin(), teleProtocal.longitudes.end());
                 goalPathFollowing.latitudes.assign(teleProtocal.latitudes.begin(), teleProtocal.latitudes.end());
-                pathFollowingAction_ -> sendGoal(goalPathFollowing,
-                                                boost::bind(&chassis::pathFollowingDCB, this, _1, _2), 
-                                                boost::bind(&chassis::pathFollowingACB, this),
-                                                boost::bind(&chassis::pathFollowingFCB, this, _1));
+                if (!debug_alone)
+                {
+                    pathFollowingAction_ -> sendGoal(goalPathFollowing,
+                                                    boost::bind(&chassis::pathFollowingDCB, this, _1, _2), 
+                                                    boost::bind(&chassis::pathFollowingACB, this),
+                                                    boost::bind(&chassis::pathFollowingFCB, this, _1));
+                }
                 break;
             case 0x03:
                 break;

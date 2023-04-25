@@ -3,10 +3,10 @@
 int main(int argc, char* argv[])
 {
     ros::init(argc, argv, "gnss_driver_node");
-    ROS_INFO("\033[1;32m---->\033[0m gnss driver node started.");
     GNSS_Driver gnss_Driver;
     int freq = 10;
     ros::Rate rate(freq);
+    ROS_INFO("\033[1;32m---->\033[0m gnss driver node started.");
     while(ros::ok())
     {
         ros::spinOnce();
