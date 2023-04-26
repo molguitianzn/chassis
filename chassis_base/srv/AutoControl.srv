@@ -1,5 +1,0 @@
-int8 autoOrManual # false: manual, true: auto
-float64[] latitudes
-float64[] longitudes
----
-int8 arrive

@@ -7,9 +7,16 @@
 #define angleSF 0.00549
 #define longitudeSF 1./1800000.
 #define latitudeSF  1./1800000.
-#define deg2rad(deg) deg/180. * (pi)
+// #define deg2rad(deg) deg/180. * (pi)
 uint8_t dataHead[HeadLen] = {0xab, 0xab};
 uint8_t manualHead[manualHeadLen] = {0xab, 0xab, 1, 2};
+
+double deg2rad(double deg)
+{
+    while(deg >= 180.) deg -= 180.;
+    while(deg < -180.) deg += 180.;
+    double ret = deg/180. * (pi);
+}
 Telecom_Protocal::Telecom_Protocal()
 {
     autoOrManual = true;
@@ -95,8 +102,7 @@ void Telecom_Protocal::parse_buffer(uint8_t* buf, int len)
         autoOrManual = true;
         break;
     case 0x03:
-        /* keyboard */
-        autoOrManual = true;
+        /* reinit motor */
         break;
     default:
         break;

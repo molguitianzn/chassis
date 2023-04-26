@@ -9,6 +9,8 @@ chassis::chassis(): nh("~")
     nh.param<std::string>("telecom_port", telePort, "/dev/ttyS0");
     nh.param<std::string>("can_port", canPort, "can0");
     nh.param<bool>("debug_alone", debug_alone, "false");
+    nh.param<double>("coe_vx", coeVx, 1.0);
+    nh.param<double>("coe_omegaz", coeOmegaz, 0.72);
     // nh.param<bool>("autoOrManual", teleProtocal.autoOrManual, "true");
     
 
@@ -261,7 +263,7 @@ void chassis::reInitMotor()
         sendCan(0x601+i, data, 8);
         memset(data, 0x00, 8);
     }
-    // sleep(1);
+    sleep(1);
 
     data[0] = 0x01;
     sendCan(0, data, 2);
@@ -333,8 +335,8 @@ void chassis::pubOdomtry()
     current_time = ros::Time::now();
     current_time_s = current_time.toSec();
     dt = current_time_s - last_time_s;
-    vx = ki->model[0];
-    vth = ki->model[1];
+    vx = coeVx * ki->model[0];
+    vth = coeOmegaz * ki->model[1];
     x += (vx * cos(th))*dt;
     y += (vx * sin(th))*dt;
     th += vth * dt;
@@ -491,6 +493,7 @@ void chassis::teleReceive()
                 }
                 break;
             case 0x03:
+                reInitMotor();
                 break;
             default:
                 break;

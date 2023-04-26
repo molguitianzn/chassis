@@ -17,7 +17,7 @@ protected:
     void readBytes(uint8_t* buf, int* i, int byte_num, void* Dest);
 public:
     bool autoOrManual; // false: manual, true: auto
-    char functionCode; // 1: 手动, 2自动, 3键盘控制
+    char functionCode; // 1: 手动, 2自动, 3电机重启
     char autoFunctionCode;
     double model[2]; // vx in manual mode; wz in manual mode
     double initAngle; // 自动模式初始航向角，东偏北多少rad

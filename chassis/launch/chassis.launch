@@ -1,4 +1,5 @@
 <launch>
+    <arg name="arg_initial_yaw" value="90"/>
     <node pkg="chassis_base" type="chassis_base_node" name="chassis_base_node">
         <param name="telecom_port" value="/dev/ttyS0"/>
         <param name="can_port" value="can0"/>
@@ -8,10 +9,14 @@
         <param name="gnss_port" value="/dev/ttyS2"/>
     </node>
 
+    <param name="/need_init_odom" value="true"/>
+    <param name="/need_init_map" value="true"/> 
     <node pkg="chassis_navigation" type="gnss_odom_node" name="gnss_odom_node">
         <param name="gnss_rate" value="1.0"/>
         <param name="v_min" value="0.5"/>
+        <param name="initial_yaw" value="$(arg arg_initial_yaw)"/>
     </node>
+    <node pkg="tf" type="static_transform_publisher" name="map_to_gnssOdom" args="0 0 0 0 0 0 /map /gnssOdom 20" />
 
     <include file="$(find chassis_navigation)/launch/launch_movebase_no_perception.launch">
     </include>

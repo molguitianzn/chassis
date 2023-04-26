@@ -16,7 +16,6 @@ int main(int argc, char* argv[])
         ros::spinOnce();
         chassisBase.pubOdomtry();
         chassisBase.teleReceive();
-        // chassisBase.reInitMotor();
         rate.sleep();
     }
     ros::spin();

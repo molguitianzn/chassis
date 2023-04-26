@@ -4,11 +4,10 @@
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_broadcaster.h>
 #include "gnss_driver/GNRMC.h"
-// #include <actionlib/server/simple_action_server.h>
 #include "chassis_navigation/getInitialpos.h"
-// #include "chassis_navigation/pathFollowingAction.h"
 #include <Eigen/Core>
 #include <Eigen/Dense>
+#include <nav_msgs/Path.h>
 class GNSS_Odom
 {
 public:
@@ -19,7 +18,7 @@ public:
     void initialMap();
 
     // 设置里程计初始位姿
-    void initialOdom();
+    void initialOdom(const nav_msgs::Odometry::ConstPtr & pOdom);
 
     // 接收到GNSS数据
     void gnssCb(const gnss_driver::GNRMC::ConstPtr & pGnrmc);
@@ -44,8 +43,6 @@ public:
 
     // 发布初始位置服务
     bool askInitialPoseCb(chassis_navigation::getInitialpos::Request& req, chassis_navigation::getInitialpos::Response& resp);
-    // // 路径跟踪服务
-    // void executePathFollowing(const chassis_navigation::pathFollowingGoalConstPtr& goal);
 
 protected:
     gnss_driver::GNRMC gnrmc[2]; // 接收到的GNRMC [0]: current, [1] last
@@ -56,7 +53,22 @@ protected:
     ros::Subscriber subOdom;
     ros::Publisher pubGnssOdom;
     ros::ServiceServer askInitialPoseServer;
-    // actionlib::SimpleActionServer<chassis_navigation::pathFollowingAction>* pathFollowingServer_;
+
+// for debug use
+    bool debug_alone; // for debug alone
+    double initial_yaw; // for debug alone
+    nav_msgs::Odometry odomCalibrate;
+    nav_msgs::Odometry odomCalibrateLast;
+
+    nav_msgs::Path odomPath;
+    nav_msgs::Path gnssPath;
+    nav_msgs::Path gnssOdomPath;
+    ros::Publisher pubOdomPath;
+    ros::Publisher pubGnssPath;
+    ros::Publisher pubGnssOdomPath;
+
+// if need calibration
+    bool need_calibration;
 
 protected:
     double MapOrigin[2]; // 原点坐标[E, N]
