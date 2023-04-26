@@ -2,9 +2,16 @@
 
 #define R_earth 6371000.
 #define pi 3.14159265
-#define deg2rad(x) x/180. * pi
+// #define deg2rad(x) x/180. * pi
 #define deltaMetersE(lon, lon_ref, lat) (lon - lon_ref) / 360. * (R_earth * pi * 2.) * cos(deg2rad(lat))
 #define deltaMetersN(lat, lat_ref) (lat - lat_ref) / 360. * (R_earth * pi * 2.)
+
+double deg2rad(double deg)
+{
+    while(deg >= 180.) deg -= 180.;
+    while(deg < -180.) deg += 180.;
+    double ret = deg/180. * (pi);
+}
 
 // bool NextGoal = true;
 // void MBDoneCB(const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseResultConstPtr& result);

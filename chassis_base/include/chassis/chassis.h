@@ -102,6 +102,8 @@ protected:
     serial::Serial sp;
     unsigned char uartBuffer[bufferLen];
     double wheelLastTime[4];
+    double coeVx;
+    double coeOmegaz;
 
     // for debug use
     bool debug_alone;
