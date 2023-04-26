@@ -94,26 +94,26 @@ int GNSS_Driver::parser(char *data, bool * isRMC)
             }
             if (index == 3)
             {
-                gnrmc.longitude = atof(field);
-                gnrmc.longitude = (int)(gnrmc.longitude / 100) + fmod(gnrmc.longitude, 100) / 60.0;
+                gnrmc.latitude = atof(field);
+                gnrmc.latitude = (int)(gnrmc.latitude / 100) + fmod(gnrmc.latitude, 100) / 60.0;
             }
             if (index == 4)
             {
                 if(strcmp(field, "S") == 0)
                 {
-                    gnrmc.longitude *= -1.;
+                    gnrmc.latitude *= -1.;
                 }
             }
             if (index == 5)
             {
-                gnrmc.latitude = atof(field);
-                gnrmc.latitude = (int)(gnrmc.latitude / 100) + fmod(gnrmc.latitude, 100) / 60.0;
+                gnrmc.longitude = atof(field);
+                gnrmc.longitude = (int)(gnrmc.longitude / 100) + fmod(gnrmc.longitude, 100) / 60.0;
             }
             if (index == 6)
             {
                 if(strcmp(field, "W") == 0)
                 {
-                    gnrmc.latitude *= -1.;
+                    gnrmc.longitude *= -1.;
                 }
             }
             if (index == 7)
@@ -142,26 +142,26 @@ int GNSS_Driver::parser(char *data, bool * isRMC)
                 field = strtok(NULL,",");
                 if (index == 2)
                 {
-                    gngga.longitude = atof(field);
-                    gngga.longitude = (int)(gngga.longitude / 100) + fmod(gngga.longitude, 100) / 60.0;
+                    gngga.latitude = atof(field);
+                    gngga.latitude = (int)(gngga.latitude / 100) + fmod(gngga.latitude, 100) / 60.0;
                 }
                 if (index == 3)
                 {
                     if(strcmp(field, "S") == 0)
                     {
-                        gngga.longitude *= -1.;
+                        gngga.latitude *= -1.;
                     }
                 }
                 if (index == 4)
                 {
-                    gngga.latitude = atof(field);
-                    gngga.latitude = (int)(gngga.latitude / 100) + fmod(gngga.latitude, 100) / 60.0;
+                    gngga.longitude = atof(field);
+                    gngga.longitude = (int)(gngga.longitude / 100) + fmod(gngga.longitude, 100) / 60.0;
                 }
                 if (index == 5)
                 {
                     if(strcmp(field, "W") == 0)
                     {
-                        gngga.latitude *= -1.;
+                        gngga.longitude *= -1.;
                     }
                     break;
                 }
